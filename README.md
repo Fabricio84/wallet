@@ -9,7 +9,7 @@ It is a application with react-native and expo that to create transations and vi
     - [x]  Criar projeto frontend
     - [x]  Colocar projeto no github
     - [x]  Criar readme
-    - [ ]  Configurar CI
+    - [X]  Configurar CI
 - Lançar transação
 - Listar transações
 - Painel de transações
