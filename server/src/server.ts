@@ -1,16 +1,6 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import { errors } from 'celebrate';
+import { Express } from 'express';
+const app = require('./app') as Express;
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-app.get('/', (request: Request, response: Response) => {
-  return response.end('Wallet server is working...');
+app.listen(3333, () => {
+  console.log('Wallet Server is working on port 3333');
 });
-
-app.use(errors());
-
-app.listen(3333);
