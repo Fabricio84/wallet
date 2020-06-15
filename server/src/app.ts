@@ -13,4 +13,4 @@ app.get('/', (request: Request, response: Response) => {
 
 app.use(errors());
 
-module.exports = app;
+export default app;

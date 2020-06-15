@@ -1,10 +1,7 @@
 import path from 'path';
 
-module.exports = {
+const defaults = {
   client: 'sqlite3',
-  connection: {
-    filename: path.resolve(__dirname, 'src', 'database', 'database.sqlite'),
-  },
   migrations: {
     directory: path.resolve(__dirname, 'src', 'database', 'migrations'),
   },
@@ -13,3 +10,18 @@ module.exports = {
   },
   useNullAsDefault: true,
 };
+
+const connections = {
+  dev: {
+    ...defaults,
+    connection: {
+      filename: path.resolve(__dirname, 'src', 'database', 'database.sqlite'),
+    },
+  },
+  test: {
+    ...defaults,
+    connection: ':memory:',
+  },
+};
+
+export default connections;
