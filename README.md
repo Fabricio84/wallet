@@ -20,7 +20,7 @@ It is a application with react-native and expo that to create transations and vi
   - [x] Backend > rodar as migrations
   - [x] Backend > criar e rodar as seeds
   - [x] Backend > configurar ambiente de teste para a base de dados
-  - [ ] Backend > Criar um teste da rota de que salva transação
+  - [x] Backend > Criar um teste da rota de que salva transação
   - [ ] Backend > criar uma rota para salvar transação
   - [ ] Frontend > Criar uma view para salvar a transação
   - [ ] Frontend > Criar testes para view

@@ -1,16 +1,13 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
+import routes from './routes';
 import { errors } from 'celebrate';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-app.get('/', (request: Request, response: Response) => {
-  return response.end('Wallet server is working...');
-});
-
+app.use(routes);
 app.use(errors());
 
 export default app;
