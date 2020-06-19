@@ -18,47 +18,105 @@ describe('Test transactions routes', () => {
     return knex.migrate.rollback().then(() => knex.destroy());
   });
 
-  const payload = {
+  const transaction = {
     transaction_type_id: 1,
+    date: '2020-01-01',
     description: 'Salário Mensal',
     installment_total: 1,
     amount: 1000,
-    tags: [1, 2, 3],
   };
+
+  const tags = [1, 2, 3];
 
   test('It should create a transaction with type Receita', async () => {
     const response = await request(app)
       .post('/transactions')
-      .send(payload)
+      .send({
+        tags,
+        ...transaction,
+      })
       .set('Accept', 'application/json');
 
     expect(response.statusCode).toBe(200);
+
+    const [transactionDb] = await knex('transactions')
+      .select('*')
+      .orderBy('id', 'desc')
+      .limit(1);
+
+    const transactionsTags = await knex('transactions_tags').where(
+      'transaction_id',
+      transactionDb.id
+    );
+
+    expect(transactionDb).toMatchObject(transaction);
+    transactionsTags.forEach((item) => {
+      expect(tags).toContain(item.tag_id);
+    });
   });
 
   test('It should create a transaction with type Despesa', async () => {
-    payload.transaction_type_id = 2;
-    payload.description = 'Condomínio';
-    payload.tags = [4, 5, 6];
+    transaction.transaction_type_id = 2;
+    transaction.description = 'Condomínio';
+    transaction.amount = -300.59;
 
     const response = await request(app)
       .post('/transactions')
-      .send(payload)
+      .send({
+        tags,
+        ...transaction,
+      })
       .set('Accept', 'application/json');
 
     expect(response.statusCode).toBe(200);
+
+    const [transactionDb] = await knex('transactions')
+      .select('*')
+      .orderBy('id', 'desc')
+      .limit(1);
+
+    const transactionsTags = await knex('transactions_tags').where(
+      'transaction_id',
+      transactionDb.id
+    );
+
+    expect(transactionDb).toMatchObject(transaction);
+    transactionsTags.forEach((item) => {
+      expect(tags).toContain(item.tag_id);
+    });
   });
 
   test('It should create a transaction with multiple installments', async () => {
-    payload.transaction_type_id = 2;
-    payload.description = 'Iptu';
-    payload.installment_total = 12;
-    payload.tags = [4, 5, 6];
+    transaction.transaction_type_id = 2;
+    transaction.description = 'Iptu';
+    transaction.installment_total = 12;
+    transaction.amount = -88.94;
 
     const response = await request(app)
       .post('/transactions')
-      .send(payload)
+      .send({
+        tags,
+        ...transaction,
+      })
       .set('Accept', 'application/json');
 
     expect(response.statusCode).toBe(200);
+
+    const transactionsDb = await knex('transactions')
+      .select('*')
+      .andWhere('description', 'Iptu')
+      .andWhere('installment_total', 12);
+
+    console.log(transactionsDb);
+
+    // const transactionsTags = await knex('transactions_tags').where(
+    //   'transaction_id',
+    //   transactionDb.id
+    // );
+
+    // expect(transactionDb).toMatchObject(transaction);
+    // transactionsTags.forEach((item) => {
+    //   expect(tags).toContain(item.tag_id);
+    // });
   });
 });

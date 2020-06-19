@@ -10,17 +10,17 @@ export async function up(knex: Knex): Promise<any> {
       .references('id')
       .inTable('transaction_type');
 
-    table.string('description').notNullable();
+    table.date('date').notNullable();
+
+    table.string('description');
 
     table.integer('installment');
     table.integer('installment_total').notNullable();
 
     table.decimal('amount').notNullable();
-    table.decimal('balance').notNullable();
 
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
-    table.timestamp('deleted_at');
   });
 }
 

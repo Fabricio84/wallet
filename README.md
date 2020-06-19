@@ -21,9 +21,12 @@ It is a application with react-native and expo that to create transations and vi
   - [x] Backend > criar e rodar as seeds
   - [x] Backend > configurar ambiente de teste para a base de dados
   - [x] Backend > Criar um teste da rota de que salva transação
-  - [ ] Backend > Adicionar uma nova coluna data na tabela transactions
-  - [ ] Backend > Transactions resolver problema do balance será estático ou calculado?
-  - [ ] Backend > criar uma rota para salvar transação
+  - [x] Backend > Adicionar uma nova coluna data na tabela transactions
+  - [x] Backend > Transactions resolver problema do balance será estático ou calculado? (calculado)
+  - [x] Backend > criar uma rota para salvar transação
+  - [x] Backend > Criar um teste que insere uma transação receita
+  - [x] Backend > Criar um teste que insere uma transação despesa
+  - [ ] Backend > Criar um teste que insere uma transação despesa com multiplas parcelas
   - [ ] Frontend > Criar uma view para salvar a transação
   - [ ] Frontend > Criar testes para view
   - [ ] Frontend > Integrar a view com o backend
