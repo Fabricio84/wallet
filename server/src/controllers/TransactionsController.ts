@@ -19,38 +19,32 @@ class TransactionsController {
       tags,
     } = request.body;
 
-    const transactions = [];
-
-    let seekDate = new Date(`${date} 01:00`);
-
-    for (let index = 0; index < installment_total; index++) {
-      transactions.push({
-        transaction_type_id,
-        date: seekDate.toISOString().split('T')[0],
-        description,
-        installment: index + 1,
-        installment_total,
-        amount,
-      });
-
-      seekDate.setMonth(seekDate.getMonth() + 1);
-    }
-
     const trx = await knex.transaction();
 
     try {
-      const transactionsIds = await trx('transactions').insert(transactions);
+      const transactionsTags: TransactionsTags[] = [];
 
-      const transactionsTags = Array<TransactionsTags>();
-      transactionsIds.forEach((transaction_id) => {
+      let seekDate = new Date(`${date} 01:00`);
+
+      for (let index = 0; index < installment_total; index++) {
+        const [transaction_id] = await trx('transactions').insert({
+          transaction_type_id,
+          date: seekDate.toISOString().split('T')[0],
+          description,
+          installment: index + 1,
+          installment_total,
+          amount,
+        });
+
         tags.forEach((tag_id: number) => {
           transactionsTags.push({
             transaction_id,
             tag_id,
           });
         });
-      });
 
+        seekDate.setMonth(seekDate.getMonth() + 1);
+      }
       await trx('transactions_tags').insert(transactionsTags);
 
       await trx.commit();

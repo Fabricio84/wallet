@@ -107,16 +107,48 @@ describe('Test transactions routes', () => {
       .andWhere('description', 'Iptu')
       .andWhere('installment_total', 12);
 
-    console.log(transactionsDb);
+    expect(transactionsDb.length).toEqual(12);
 
-    // const transactionsTags = await knex('transactions_tags').where(
-    //   'transaction_id',
-    //   transactionDb.id
-    // );
+    let seekDate = new Date(`${transaction.date} 01:00`);
+    let seekInstallment = 1;
 
-    // expect(transactionDb).toMatchObject(transaction);
-    // transactionsTags.forEach((item) => {
-    //   expect(tags).toContain(item.tag_id);
-    // });
+    const transactionIds: Number[] = [];
+    transactionsDb.forEach(
+      ({
+        id,
+        transaction_type_id,
+        description,
+        installment_total,
+        amount,
+        date,
+        installment,
+      }) => {
+        expect(transaction_type_id).toEqual(2);
+        expect(description).toEqual('Iptu');
+        expect(installment_total).toEqual(12);
+        expect(amount).toEqual(-88.94);
+
+        expect(date).toEqual(seekDate.toISOString().split('T')[0]);
+        expect(installment).toEqual(seekInstallment);
+
+        seekDate.setMonth(seekDate.getMonth() + 1);
+        seekInstallment++;
+
+        transactionIds.push(id);
+      }
+    );
+
+    const transactionsTags = await knex('transactions_tags').whereIn(
+      'transaction_id',
+      transactionIds
+    );
+
+    transactionIds.forEach((id) => {
+      const tagsDb = transactionsTags
+        .filter(({ transaction_id }) => transaction_id === id)
+        .map(({ tag_id }) => tag_id);
+
+      expect(tags).toEqual(tagsDb);
+    });
   });
 });
