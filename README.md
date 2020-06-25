@@ -28,6 +28,8 @@ It is a application with react-native and expo that to create transations and vi
   - [x] Backend > Criar um teste que insere uma transação despesa
   - [x] Backend > Criar um teste que insere uma transação despesa com multiplas parcelas
   - [ ] Frontend > Criar uma view para salvar a transação
+    - [x] organizando o projeto criando pastas e rotas
+    - [x] criando componentes home e transactions sem implementação
   - [ ] Frontend > Criar testes para view
   - [ ] Frontend > Integrar a view com o backend
 - Listar transações
