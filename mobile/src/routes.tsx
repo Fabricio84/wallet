@@ -13,7 +13,7 @@ const Routes = () => {
       <AppStack.Navigator
         headerMode='none'
         screenOptions={{
-          cardStyle: { backgroundColor: 'f0f0f5' },
+          cardStyle: { backgroundColor: '#f0f0f5' },
         }}
       >
         <AppStack.Screen name='Home' component={Home} />
@@ -22,3 +22,5 @@ const Routes = () => {
     </NavigationContainer>
   );
 };
+
+export default Routes;

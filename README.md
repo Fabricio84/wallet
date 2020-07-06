@@ -27,9 +27,19 @@ It is a application with react-native and expo that to create transations and vi
   - [x] Backend > Criar um teste que insere uma transação receita
   - [x] Backend > Criar um teste que insere uma transação despesa
   - [x] Backend > Criar um teste que insere uma transação despesa com multiplas parcelas
+  - [ ] Frontend > Criar a view home
+    - [ ] escolher o logo
+    - [ ] preparar o logo
+    - [ ] adicionar o logo
   - [ ] Frontend > Criar uma view para salvar a transação
     - [x] organizando o projeto criando pastas e rotas
     - [x] criando componentes home e transactions sem implementação
+    - [ ] criando o formulário e adicionando os inputs
+      - [x] criado o select de tipo de transação
+      - [x] adicionado o datepicker para selecionar a data
+      - [ ] atualizar o datepicker para o community
+    - [ ] ajustando os estilos
+    - [ ] criar a função para salvar a transação
   - [ ] Frontend > Criar testes para view
   - [ ] Frontend > Integrar a view com o backend
 - Listar transações

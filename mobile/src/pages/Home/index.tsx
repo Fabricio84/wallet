@@ -1,79 +1,45 @@
 import React, { useState } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
-import {
-  View,
-  ImageBackground,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
-  const [uf, setUf] = useState('');
-  const [city, setCity] = useState('');
   const navigation = useNavigation();
 
-  function handleNavigateToPoints() {
-    navigation.navigate('Points', { uf, city });
+  function handleNavigateToTransactions() {
+    navigation.navigate('Transactions');
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    <ImageBackground
+      source={require('../../assets/home-background.png')}
+      style={styles.container}
+      imageStyle={{ width: 274, height: 368 }}
     >
-      <ImageBackground
-        source={require('../../assets/home-background.png')}
-        style={styles.container}
-        imageStyle={{ width: 274, height: 368 }}
-      >
-        <View style={styles.main}>
-          <Image source={require('../../assets/logo.png')} />
-          <View>
-            <Text style={styles.title}>
-              Seu marketplace de coleta de resíduos.
-            </Text>
-            <Text style={styles.description}>
-              Ajudamos pessoas a encontrarem pontos de coleta de forma
-              eficiente.
+      <View style={styles.main}>
+        <Image source={require('../../assets/logo.png')} />
+        <View>
+          <Text style={styles.title}>Wallet uma carteira inteligente</Text>
+          <Text style={styles.description}>
+            Auxiliando sua saúde financeira para que você não fique doente.
+          </Text>
+        </View>
+      </View>
+      <View style={styles.footer}>
+        <RectButton
+          style={styles.button}
+          onPress={handleNavigateToTransactions}
+        >
+          <View style={styles.buttonIcon}>
+            <Text>
+              <Icon name='arrow-right' color='#fff' size={24} />
             </Text>
           </View>
-        </View>
-
-        <View style={styles.footer}>
-          <TextInput
-            style={styles.input}
-            placeholder='Digite a UF'
-            value={uf}
-            maxLength={2}
-            autoCapitalize='characters'
-            autoCorrect={false}
-            onChangeText={setUf}
-          ></TextInput>
-          <TextInput
-            style={styles.input}
-            placeholder='Digite a Cidade'
-            value={city}
-            autoCorrect={false}
-            onChangeText={setCity}
-          ></TextInput>
-
-          <RectButton style={styles.button} onPress={handleNavigateToPoints}>
-            <View style={styles.buttonIcon}>
-              <Text>
-                <Icon name='arrow-right' color='#fff' size={24} />
-              </Text>
-            </View>
-            <Text style={styles.buttonText}>Entrar</Text>
-          </RectButton>
-        </View>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </RectButton>
+      </View>
+    </ImageBackground>
   );
 };
 

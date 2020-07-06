@@ -1,114 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  ScrollView,
-  Alert,
+  TextInput,
+  Picker,
 } from 'react-native';
-import { SvgUri } from 'react-native-svg';
-import * as Location from 'expo-location';
-import api from '../../services/api';
+import { RectButton } from 'react-native-gesture-handler';
+import DatePicker from 'react-native-datepicker';
 
-interface Item {
-  id: number;
-  title: string;
-  image_url: string;
-}
+// import api from '../../services/api';
 
-interface Point {
-  id: number;
-  name: string;
-  image: string;
-  image_url: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface Params {
-  uf: string;
-  city: string;
-}
-
-const Points = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [points, setPoints] = useState<Point[]>([]);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-
-  const [initialPosition, setInitialPosition] = useState<[number, number]>([
-    0,
-    0,
-  ]);
-
+const Transactions = () => {
   const navigation = useNavigation();
-  const route = useRoute();
-
-  const routeParams = route.params as Params;
-
-  useEffect(() => {
-    async function loadPosition() {
-      const { status } = await Location.requestPermissionsAsync();
-
-      if (status !== 'granted') {
-        Alert.alert(
-          'Oooops...',
-          'Precisamos de sua permissão para obter sua localização.'
-        );
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync();
-
-      const { latitude, longitude } = location.coords;
-
-      setInitialPosition([latitude, longitude]);
-    }
-
-    loadPosition();
-  }, []);
-
-  useEffect(() => {
-    api.get('items').then((response) => {
-      setItems(response.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    api
-      .get('points', {
-        params: {
-          city: routeParams.city,
-          uf: routeParams.uf,
-          items: selectedItems,
-        },
-      })
-      .then((response) => {
-        setPoints(response.data);
-      });
-  }, [selectedItems]);
+  const [transactionType, setTransactionType] = useState<String>('');
+  const [date, setDate] = useState<string>(
+    new Date().toLocaleDateString('pt-BR')
+  );
 
   function handleNavigateBack() {
     navigation.goBack();
   }
 
-  function handleNavigateToDetail(id: number) {
-    navigation.navigate('Detail', { point_id: id });
-  }
+  function getMinDate() {
+    let minDate = new Date();
+    minDate.setMonth(0);
+    minDate.setDate(0);
 
-  function handleSelectedItem(id: number) {
-    const alreadySelected = selectedItems.findIndex((item) => item === id);
-
-    if (alreadySelected >= 0) {
-      const filteredItems = selectedItems.filter((item) => item !== id);
-
-      setSelectedItems(filteredItems);
-    } else {
-      setSelectedItems([...selectedItems, id]);
-    }
+    return minDate;
   }
 
   return (
@@ -118,34 +41,70 @@ const Points = () => {
           <Icon name='arrow-left' size={20} color='#34cb79' />
         </TouchableOpacity>
 
-        <Text style={styles.title}>Bem vindo.</Text>
-        <Text style={styles.description}>
-          Encontre no mapa um ponto de coleta.
-        </Text>
+        <Text style={styles.title}>Adicionar uma transação</Text>
 
-        <View style={styles.mapContainer}></View>
-      </View>
-      <View style={styles.itemsContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 20 }}
+        <Picker
+          style={styles.input}
+          selectedValue={transactionType}
+          onValueChange={setTransactionType}
         >
-          {items.map((item) => (
-            <TouchableOpacity
-              key={String(item.id)}
-              style={[
-                styles.item,
-                selectedItems.includes(item.id) ? styles.selectedItem : {},
-              ]}
-              onPress={() => handleSelectedItem(item.id)}
-              activeOpacity={0.6}
-            >
-              <SvgUri width={42} height={42} uri={item.image_url} />
-              <Text style={styles.itemTitle}>{item.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+          <Picker.Item label='Tipo de transação' value='' />
+          <Picker.Item label='Receita' value='0' />
+          <Picker.Item label='Despesa' value='1' />
+        </Picker>
+
+        <DatePicker
+          date={date}
+          mode='date'
+          placeholder='Escolha uma data'
+          format='DD/MM/YYYY'
+          style={{ width: '100%' }}
+          minDate={getMinDate()}
+          confirmBtnText='Confirm'
+          cancelBtnText='Cancel'
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0,
+            },
+            dateInput: {
+              marginLeft: 36,
+            },
+            // ... You can check the source to find the other keys.
+          }}
+          onDateChange={setDate}
+        />
+
+        <TextInput style={styles.input} placeholder='Descrição' />
+
+        <View style={styles.formGroup}>
+          <TextInput
+            style={[styles.input, { flex: 1, marginRight: 12 }]}
+            placeholder='Parcelas'
+            keyboardType='numeric'
+          />
+
+          <TextInput
+            style={[styles.input, { flex: 2 }]}
+            placeholder='Valor'
+            keyboardType='decimal-pad'
+          />
+        </View>
+
+        <TextInput style={styles.input} placeholder='Tags' />
+
+        <View style={styles.footer}>
+          <RectButton style={styles.button}>
+            <View style={styles.buttonIcon}>
+              <Text>
+                <Icon name='arrow-right' color='#fff' size={24} />
+              </Text>
+            </View>
+            <Text style={styles.buttonText}>Salvar</Text>
+          </RectButton>
+        </View>
       </View>
     </>
   );
@@ -162,6 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Ubuntu_700Bold',
     marginTop: 24,
+    marginBottom: 24,
   },
 
   description: {
@@ -171,82 +131,47 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_400Regular',
   },
 
-  mapContainer: {
-    flex: 1,
-    width: '100%',
+  input: {
+    height: 60,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    marginBottom: 8,
+    paddingHorizontal: 24,
+    fontSize: 16,
+  },
+
+  formGroup: {
+    flexDirection: 'row',
+  },
+
+  footer: {},
+
+  button: {
+    backgroundColor: '#34CB79',
+    height: 60,
+    flexDirection: 'row',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 16,
+    alignItems: 'center',
+    marginTop: 8,
   },
 
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-
-  mapMarker: {
-    width: 90,
-    height: 80,
-  },
-
-  mapMarkerContainer: {
-    width: 90,
-    height: 70,
-    backgroundColor: '#34CB79',
-    flexDirection: 'column',
-    borderRadius: 8,
-    overflow: 'hidden',
+  buttonIcon: {
+    height: 60,
+    width: 60,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'center',
     alignItems: 'center',
   },
 
-  mapMarkerImage: {
-    width: 90,
-    height: 45,
-    resizeMode: 'cover',
-  },
-
-  mapMarkerTitle: {
+  buttonText: {
     flex: 1,
-    fontFamily: 'Roboto_400Regular',
+    justifyContent: 'center',
+    textAlign: 'center',
     color: '#FFF',
-    fontSize: 13,
-    lineHeight: 23,
-  },
-
-  itemsContainer: {
-    flexDirection: 'row',
-    marginTop: 16,
-    marginBottom: 32,
-  },
-
-  item: {
-    backgroundColor: '#fff',
-    borderWidth: 2,
-    borderColor: '#eee',
-    height: 120,
-    width: 120,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 16,
-    marginRight: 8,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-
-    textAlign: 'center',
-  },
-
-  selectedItem: {
-    borderColor: '#34CB79',
-    borderWidth: 2,
-  },
-
-  itemTitle: {
-    fontFamily: 'Roboto_400Regular',
-    textAlign: 'center',
-    fontSize: 13,
-    backgroundColor: 'transparent',
+    fontFamily: 'Roboto_500Medium',
+    fontSize: 16,
   },
 });
 
-export default Points;
+export default Transactions;
