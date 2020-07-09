@@ -11,7 +11,7 @@ const defaults = {
   useNullAsDefault: true,
 };
 
-const connections = {
+module.exports = {
   dev: {
     ...defaults,
     connection: {
@@ -23,5 +23,3 @@ const connections = {
     connection: ':memory:',
   },
 };
-
-export default connections;

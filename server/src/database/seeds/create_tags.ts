@@ -28,6 +28,8 @@ export async function seed(knex: Knex): Promise<any> {
         { name: 'Dinheiro' },
         { name: 'Debito' },
         { name: 'Credito' },
+        { name: 'Salário' },
+        { name: 'Projeto' },
       ]);
     });
 }

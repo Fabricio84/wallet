@@ -31,16 +31,27 @@ It is a application with react-native and expo that to create transations and vi
     - [ ] escolher o logo
     - [ ] preparar o logo
     - [ ] adicionar o logo
-  - [ ] Frontend > Criar uma view para salvar a transação
+  - [x] Frontend > Criar uma view para salvar a transação
     - [x] organizando o projeto criando pastas e rotas
     - [x] criando componentes home e transactions sem implementação
-    - [ ] criando o formulário e adicionando os inputs
+    - [x] criando o formulário e adicionando os inputs
       - [x] criado o select de tipo de transação
       - [x] adicionado o datepicker para selecionar a data
-      - [ ] atualizar o datepicker para o community
-    - [ ] ajustando os estilos
-    - [ ] criar a função para salvar a transação
-  - [ ] Frontend > Criar testes para view
-  - [ ] Frontend > Integrar a view com o backend
+      - [x] removendo datepicker e usando o textinput para data
+      - [x] trocar os tipo de data de number para string
+      - [x] carregar a lista de tags
+      - [x] criar o controle para selecionar as tags
+      - [x] add um scroll na view
+      - [x] adicionando alguns labels
+      - [x] corrigir warnings lançados pelo picker
+    - [x] criar a função para salvar a transação
+      - [x] criar função de payload
+      - [x] criar função que valida o payload
+      - [x] criar função que envia o payload
+      - [x] criar o callbacks de sucesso e erro
+    - [x] buscar as tags da base de dados
+    - [x] ajustando os estilos
+- [ ] Frontend > Criar testes para view
+- [ ] Frontend > Integrar a view com o backend
 - Listar transações
 - Painel de transações

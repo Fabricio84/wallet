@@ -48,10 +48,12 @@ class TransactionsController {
       await trx('transactions_tags').insert(transactionsTags);
 
       await trx.commit();
-
+      console.log('>transactions:create=OK');
       return response.status(200).end();
     } catch (error) {
       await trx.rollback();
+      console.log('>transactions:create=ERROR');
+      console.log(error);
       return response.status(500).json(error);
     }
   }

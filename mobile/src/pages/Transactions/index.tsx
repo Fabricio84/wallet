@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Constants from 'expo-constants';
+import styles from './styles';
 import { Feather as Icon } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   Text,
   TextInput,
   Picker,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import api from '../../services/api';
 
@@ -19,6 +18,15 @@ interface Tag {
   id: number;
   name: string;
   selected: boolean;
+}
+
+interface Transaction {
+  transaction_type_id: Number;
+  date: String;
+  description: String;
+  installment_total: String;
+  amount: String;
+  tags: Number[];
 }
 
 const Transactions = () => {
@@ -41,30 +49,21 @@ const Transactions = () => {
     setYear(currentDate.split('-')[0]);
 
     // load tags
-    setTags([
-      { id: 1, name: 'Transporte', selected: false },
-      { id: 2, name: 'Combustivel', selected: false },
-      { id: 3, name: 'Manutenção', selected: false },
-      { id: 4, name: 'Documentação', selected: false },
-      { id: 5, name: 'Seguro', selected: false },
-      { id: 6, name: 'Carro', selected: false },
-      { id: 7, name: 'Moto', selected: false },
-      { id: 8, name: 'Saúde', selected: false },
-      { id: 9, name: 'Educação', selected: false },
-      { id: 10, name: 'Lanche', selected: false },
-      { id: 11, name: 'Igreja', selected: false },
-      { id: 12, name: 'Presente', selected: false },
-      { id: 13, name: 'Mercado', selected: false },
-      { id: 14, name: 'Alimentação', selected: false },
-      { id: 15, name: 'Feira', selected: false },
-      { id: 16, name: 'Imóvel', selected: false },
-      { id: 17, name: 'Cartão Taxa', selected: false },
-      { id: 18, name: 'Banco', selected: false },
-      { id: 19, name: 'Dinheiro', selected: false },
-      { id: 20, name: 'Debito', selected: false },
-      { id: 21, name: 'Credito', selected: false },
-    ]);
+    loadTags();
   }, []);
+
+  function loadTags() {
+    api
+      .get('tags')
+      .then((response) => {
+        let tags = response.data.map((item: any) => ({
+          ...item,
+          selected: false,
+        }));
+        setTags(tags);
+      })
+      .catch(() => Alert.alert('Houve um erro no carregamento das tags!'));
+  }
 
   function handleNavigateBack() {
     navigation.goBack();
@@ -75,19 +74,50 @@ const Transactions = () => {
     setTags([...tags]);
   }
 
-  function getPayload() {
+  function getPayload(): Transaction {
     return {
-      transactionType: Number(transactionType),
+      transaction_type_id: Number(transactionType),
       date: [year, month, day].join('-'),
       description,
-      installment,
+      installment_total: installment,
       amount,
       tags: tags.filter((tag) => tag.selected).map((tag) => tag.id),
     };
   }
 
-  function save() {
-    console.log(getPayload());
+  function validate({ installment_total, amount, tags }: Transaction) {
+    if (installment_total.length === 0) {
+      Alert.alert('Tipo de transação é obrigatório');
+      return false;
+    }
+
+    if (amount.length === 0) {
+      Alert.alert('Valor é obrigatório');
+      return false;
+    }
+
+    if (tags.length === 0) {
+      Alert.alert('Escolha pelos menos uma Tag');
+      return false;
+    }
+
+    return true;
+  }
+
+  async function save() {
+    const payload = getPayload();
+    if (validate(payload)) {
+      api
+        .post('transactions', payload)
+        .then((response) => {
+          navigation.navigate('Home');
+        })
+        .catch((error) => {
+          Alert.alert(
+            'Houve um erro ao tentar salvar sua transação, por favor tente mais tarde!'
+          );
+        });
+    }
   }
 
   return (
@@ -111,7 +141,7 @@ const Transactions = () => {
           <Picker
             style={styles.input}
             selectedValue={transactionType}
-            onValueChange={setTransactionType}
+            onValueChange={(itemValue) => setTransactionType(itemValue)}
           >
             <Picker.Item label='Tipo de transação' value='' />
             <Picker.Item label='Receita' value='0' />
@@ -205,116 +235,5 @@ const Transactions = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 5 + Constants.statusBarHeight,
-  },
-
-  scrollView: {
-    marginHorizontal: 24,
-    overflow: 'hidden',
-  },
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  title: {
-    fontSize: 20,
-    fontFamily: 'Ubuntu_700Bold',
-    marginTop: 24,
-    marginBottom: 24,
-  },
-
-  subTitle: {
-    color: '#6C6C80',
-    fontSize: 16,
-    marginTop: 12,
-    marginBottom: 12,
-  },
-
-  label: {
-    color: '#6C6C80',
-    fontSize: 16,
-    marginBottom: 12,
-  },
-
-  input: {
-    height: 60,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    marginBottom: 8,
-    paddingHorizontal: 24,
-    fontSize: 16,
-  },
-
-  tagList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 24,
-  },
-
-  tagItem: {
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    margin: 4,
-    paddingHorizontal: 8,
-    fontSize: 16,
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  tagItemSelected: {
-    backgroundColor: '#34CB79',
-  },
-
-  tagItemText: {
-    margin: 8,
-    alignSelf: 'center',
-  },
-
-  tagItemTextSelected: {
-    color: '#FFF',
-  },
-
-  formGroup: {
-    flexDirection: 'row',
-  },
-
-  footer: {},
-
-  button: {
-    backgroundColor: '#34CB79',
-    height: 60,
-    flexDirection: 'row',
-    borderRadius: 10,
-    overflow: 'hidden',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-
-  buttonIcon: {
-    height: 60,
-    width: 60,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  buttonText: {
-    flex: 1,
-    justifyContent: 'center',
-    textAlign: 'center',
-    color: '#FFF',
-    fontFamily: 'Roboto_500Medium',
-    fontSize: 16,
-  },
-});
 
 export default Transactions;
