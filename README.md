@@ -53,8 +53,9 @@ It is a application with react-native and expo that to create transations and vi
     - [x] ajustando os estilos
 - Listar transações
   - [x] Backend > criar testes para a rota de listagem de transações
-  - [x] Backend > Criar a rota de listagem de transações
-  - [ ] Frontend > Criar testes para a view de listagem de transações
+  - [ ] Backend > Criar a rota de listagem de transações
+    - [ ] Backend > adicionar parametros de page e to e retornar o count no header
   - [ ] Frontend > Criar a view de listagem de transações
+    - [ ] Frontend > Ajustar o layout do item
   - [ ] Integrar a view com a rota
 - Painel de transações

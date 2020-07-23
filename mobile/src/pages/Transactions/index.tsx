@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
 
 import api from '../../services/api';
 
@@ -17,8 +19,8 @@ interface Tag {
 interface Transaction {
   id: number;
   transaction_type_id: number;
-  date: String;
-  description: String;
+  date: string;
+  description: string;
   installment: number;
   installment_total: number;
   amount: number;
@@ -52,9 +54,7 @@ export default function Transactions() {
       params: { page },
     });
 
-    console.log(response);
-
-    // setTransaction([...transaction, ...response.data]);
+    setTransaction([...transaction, ...response.data]);
     // setTotal(response.headers['x-total-count']);
     // setPage(page + 1);
     setLoading(false);
@@ -63,6 +63,16 @@ export default function Transactions() {
   useEffect(() => {
     loadTransaction();
   }, []);
+
+  function transactionTypeParse(transactionTypeId: number) {
+    return transactionTypeId === 0 ? 'Receita' : 'Despesa';
+  }
+
+  function dateParse(dateStr: string) {
+    const timeStamp = Date.parse('2020-07-21T21:00');
+    const date = new Date(timeStamp);
+    return date.toLocaleDateString('pt-BR');
+  }
 
   return (
     <View style={styles.container}>
@@ -90,11 +100,13 @@ export default function Transactions() {
           <View style={styles.incident}>
             <Text style={styles.incidentPropery}>TIPO:</Text>
             <Text style={styles.incidentValue}>
-              {transaction.transaction_type_id}
+              {transactionTypeParse(transaction.transaction_type_id)}
             </Text>
 
             <Text style={styles.incidentPropery}>DATA:</Text>
-            <Text style={styles.incidentValue}>{transaction.date}</Text>
+            <Text style={styles.incidentValue}>
+              {dateParse(transaction.date)}
+            </Text>
 
             <Text style={styles.incidentPropery}>DESCRIÇÂO:</Text>
             <Text style={styles.incidentValue}>{transaction.description}</Text>
