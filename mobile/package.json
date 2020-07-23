@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.1.0",
@@ -33,10 +34,18 @@
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.6",
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/expo": "^33.0.1",
+    "@types/jest": "^26.0.4",
     "@types/react": "~16.9.23",
     "@types/react-native": "~0.61.17",
+    "@types/react-test-renderer": "^16.9.2",
+    "babel-jest": "^26.1.0",
     "babel-preset-expo": "~8.1.0",
+    "jest-expo": "^38.0.2",
+    "react-test-renderer": "^16.13.1",
     "typescript": "~3.8.3"
   },
   "private": true

@@ -51,7 +51,10 @@ It is a application with react-native and expo that to create transations and vi
       - [x] criar o callbacks de sucesso e erro
     - [x] buscar as tags da base de dados
     - [x] ajustando os estilos
-- [ ] Frontend > Criar testes para view
-- [ ] Frontend > Integrar a view com o backend
 - Listar transações
+  - [x] Backend > criar testes para a rota de listagem de transações
+  - [x] Backend > Criar a rota de listagem de transações
+  - [ ] Frontend > Criar testes para a view de listagem de transações
+  - [ ] Frontend > Criar a view de listagem de transações
+  - [ ] Integrar a view com a rota
 - Painel de transações

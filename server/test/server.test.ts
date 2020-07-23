@@ -151,4 +151,19 @@ describe('Test transactions routes', () => {
       expect(tags).toEqual(tagsDb);
     });
   });
+
+  test('It should list transactions', async () => {
+    const response = await request(app).get('/transactions');
+
+    expect(response.statusCode).toBe(200);
+
+    const transactionsDb = await knex('transactions')
+      .select('*')
+      .orderBy('date');
+
+    expect(response.body.length).toEqual(transactionsDb.length);
+    transactionsDb.forEach((transaction, index) => {
+      expect(transaction).toMatchObject(response.body[index]);
+    });
+  });
 });

@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './pages/Home';
 import Transactions from './pages/Transactions';
+import TransactionSave from './pages/TransactionSave';
 
 const AppStack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const Routes = () => {
       >
         <AppStack.Screen name='Home' component={Home} />
         <AppStack.Screen name='Transactions' component={Transactions} />
+        <AppStack.Screen name='TransactionSave' component={TransactionSave} />
       </AppStack.Navigator>
     </NavigationContainer>
   );

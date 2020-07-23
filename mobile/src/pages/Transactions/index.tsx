@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles';
-import { Feather as Icon } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  Picker,
-  SafeAreaView,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
+
 import api from '../../services/api';
+
+import logoImg from '../../assets/logo.png';
+import styles from './styles';
 
 interface Tag {
   id: number;
@@ -21,219 +15,108 @@ interface Tag {
 }
 
 interface Transaction {
-  transaction_type_id: Number;
+  id: number;
+  transaction_type_id: number;
   date: String;
   description: String;
-  installment_total: String;
-  amount: String;
-  tags: Number[];
+  installment: number;
+  installment_total: number;
+  amount: number;
+  tags: number[];
 }
 
-const Transactions = () => {
+export default function Transactions() {
+  const [transaction, setTransaction] = useState<Transaction[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const navigation = useNavigation();
 
-  const [transactionType, setTransactionType] = useState<String>('');
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-  const [description, setDescription] = useState('');
-  const [installment, setInstallment] = useState('');
-  const [amount, setAmount] = useState('');
-  const [tags, setTags] = useState<Tag[]>([]);
+  function NavigateToDetail(transaction: Transaction) {
+    navigation.navigate('Detail', { transaction });
+  }
+
+  async function loadTransaction() {
+    if (loading) {
+      return;
+    }
+
+    if (total > 0 && transaction.length === total) {
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await api.get('transactions', {
+      params: { page },
+    });
+
+    console.log(response);
+
+    // setTransaction([...transaction, ...response.data]);
+    // setTotal(response.headers['x-total-count']);
+    // setPage(page + 1);
+    setLoading(false);
+  }
 
   useEffect(() => {
-    // load current date
-    const currentDate = new Date().toISOString().split('T')[0];
-    setDay(currentDate.split('-')[2]);
-    setMonth(currentDate.split('-')[1]);
-    setYear(currentDate.split('-')[0]);
-
-    // load tags
-    loadTags();
+    loadTransaction();
   }, []);
 
-  function loadTags() {
-    api
-      .get('tags')
-      .then((response) => {
-        let tags = response.data.map((item: any) => ({
-          ...item,
-          selected: false,
-        }));
-        setTags(tags);
-      })
-      .catch(() => Alert.alert('Houve um erro no carregamento das tags!'));
-  }
-
-  function handleNavigateBack() {
-    navigation.goBack();
-  }
-
-  function handleTagSelected(tag: Tag) {
-    tag.selected = !tag.selected;
-    setTags([...tags]);
-  }
-
-  function getPayload(): Transaction {
-    return {
-      transaction_type_id: Number(transactionType),
-      date: [year, month, day].join('-'),
-      description,
-      installment_total: installment,
-      amount,
-      tags: tags.filter((tag) => tag.selected).map((tag) => tag.id),
-    };
-  }
-
-  function validate({ installment_total, amount, tags }: Transaction) {
-    if (installment_total.length === 0) {
-      Alert.alert('Tipo de transação é obrigatório');
-      return false;
-    }
-
-    if (amount.length === 0) {
-      Alert.alert('Valor é obrigatório');
-      return false;
-    }
-
-    if (tags.length === 0) {
-      Alert.alert('Escolha pelos menos uma Tag');
-      return false;
-    }
-
-    return true;
-  }
-
-  async function save() {
-    const payload = getPayload();
-    if (validate(payload)) {
-      api
-        .post('transactions', payload)
-        .then((response) => {
-          navigation.navigate('Home');
-        })
-        .catch((error) => {
-          Alert.alert(
-            'Houve um erro ao tentar salvar sua transação, por favor tente mais tarde!'
-          );
-        });
-    }
-  }
-
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.header}>
-            <TouchableOpacity onPress={handleNavigateBack}>
-              <Icon name='arrow-left' size={24} color='#34cb79' />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image source={logoImg} />
+        <Text style={styles.headerText}>
+          Total de
+          <Text style={styles.headerTextBold}> {total} casos.</Text>
+        </Text>
+      </View>
+
+      <Text style={styles.title}>Bem vindo</Text>
+      <Text style={styles.description}>
+        Escolha um dos casos abaixo e salve o dia.
+      </Text>
+
+      <FlatList
+        style={styles.incidentList}
+        data={transaction}
+        keyExtractor={(transaction: Transaction) => String(transaction.id)}
+        showsVerticalScrollIndicator={false}
+        onEndReached={loadTransaction}
+        onEndReachedThreshold={0.2}
+        renderItem={({ item: transaction }) => (
+          <View style={styles.incident}>
+            <Text style={styles.incidentPropery}>TIPO:</Text>
+            <Text style={styles.incidentValue}>
+              {transaction.transaction_type_id}
+            </Text>
+
+            <Text style={styles.incidentPropery}>DATA:</Text>
+            <Text style={styles.incidentValue}>{transaction.date}</Text>
+
+            <Text style={styles.incidentPropery}>DESCRIÇÂO:</Text>
+            <Text style={styles.incidentValue}>{transaction.description}</Text>
+
+            <Text style={styles.incidentPropery}>VALOR:</Text>
+            <Text style={styles.incidentValue}>
+              {Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              }).format(transaction.amount)}
+            </Text>
+
+            <TouchableOpacity
+              style={styles.detailsButton}
+              onPress={() => NavigateToDetail(transaction)}
+            >
+              <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
+              <Feather name='arrow-right' size={16} color='#e02041' />
             </TouchableOpacity>
-            <Text style={styles.title}>Adicionar uma transação</Text>
-            <TouchableOpacity onPress={save}>
-              <Icon name='check-circle' size={24} color='#34cb79' />
-            </TouchableOpacity>
           </View>
-
-          <Text style={styles.label}>Tipo de transação</Text>
-          <Picker
-            style={styles.input}
-            selectedValue={transactionType}
-            onValueChange={(itemValue) => setTransactionType(itemValue)}
-          >
-            <Picker.Item label='Tipo de transação' value='' />
-            <Picker.Item label='Receita' value='0' />
-            <Picker.Item label='Despesa' value='1' />
-          </Picker>
-
-          <View style={styles.formGroup}>
-            <TextInput
-              style={[
-                styles.input,
-                { flex: 1, marginRight: 12, textAlign: 'center' },
-              ]}
-              placeholder='Dia'
-              keyboardType='numeric'
-              maxLength={2}
-              defaultValue={day}
-              onChangeText={(text) => setDay(text)}
-            />
-
-            <TextInput
-              style={[
-                styles.input,
-                { flex: 1, marginRight: 12, textAlign: 'center' },
-              ]}
-              placeholder='Mês'
-              keyboardType='numeric'
-              maxLength={2}
-              defaultValue={month}
-              onChangeText={(text) => setMonth(text)}
-            />
-
-            <TextInput
-              style={[styles.input, { flex: 2, textAlign: 'center' }]}
-              placeholder='Ano'
-              keyboardType='numeric'
-              maxLength={4}
-              defaultValue={year}
-              onChangeText={(text) => setYear(text)}
-            />
-          </View>
-
-          <TextInput
-            style={styles.input}
-            placeholder='Descrição'
-            defaultValue={description}
-            onChangeText={(text) => setDescription(text)}
-          />
-
-          <View style={styles.formGroup}>
-            <TextInput
-              style={[styles.input, { flex: 1, marginRight: 12 }]}
-              placeholder='Parcelas'
-              keyboardType='numeric'
-              defaultValue={installment}
-              onChangeText={(text) => setInstallment(text)}
-            />
-
-            <TextInput
-              style={[styles.input, { flex: 2 }]}
-              placeholder='R$ Valor'
-              keyboardType='decimal-pad'
-              defaultValue={amount}
-              onChangeText={(text) => setAmount(text)}
-            />
-          </View>
-
-          <Text style={styles.subTitle}>Escolha as tags</Text>
-          <View style={styles.tagList}>
-            {tags.map((tag) => (
-              <TouchableOpacity
-                key={tag.id}
-                onPress={() => handleTagSelected(tag)}
-                style={[
-                  styles.tagItem,
-                  tag.selected ? styles.tagItemSelected : {},
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.tagItemText,
-                    tag.selected ? styles.tagItemTextSelected : {},
-                  ]}
-                >
-                  {tag.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+        )}
+      />
+    </View>
   );
-};
-
-export default Transactions;
+}

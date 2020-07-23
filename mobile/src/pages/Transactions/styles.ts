@@ -1,15 +1,11 @@
-import Constants from 'expo-constants';
 import { StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 5 + Constants.statusBarHeight,
-  },
-
-  scrollView: {
-    marginHorizontal: 24,
-    overflow: 'hidden',
+    paddingHorizontal: 24,
+    paddingTop: Constants.statusBarHeight + 20,
   },
 
   header: {
@@ -18,94 +14,62 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
 
+  headerText: {
+    fontSize: 15,
+    color: '#737380',
+  },
+
+  headerTextBold: {
+    fontWeight: 'bold',
+  },
+
   title: {
-    fontSize: 20,
-    fontFamily: 'Ubuntu_700Bold',
-    marginTop: 24,
+    fontSize: 30,
+    marginBottom: 16,
+    marginTop: 48,
+    color: '#13131a',
+    fontWeight: 'bold',
+  },
+
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#737380',
+  },
+
+  incidentList: {
+    marginTop: 32,
+  },
+
+  incident: {
+    padding: 24,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginBottom: 16,
+  },
+
+  incidentPropery: {
+    fontSize: 14,
+    color: '#41414d',
+    fontWeight: 'bold',
+  },
+
+  incidentValue: {
+    marginTop: 8,
+    fontSize: 15,
     marginBottom: 24,
+    color: '#737380',
   },
 
-  subTitle: {
-    color: '#6C6C80',
-    fontSize: 16,
-    marginTop: 12,
-    marginBottom: 12,
-  },
-
-  label: {
-    color: '#6C6C80',
-    fontSize: 16,
-    marginBottom: 12,
-  },
-
-  input: {
-    height: 60,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    marginBottom: 8,
-    paddingHorizontal: 24,
-    fontSize: 16,
-  },
-
-  tagList: {
+  detailsButton: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 24,
-  },
-
-  tagItem: {
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    margin: 4,
-    paddingHorizontal: 8,
-    fontSize: 16,
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 
-  tagItemSelected: {
-    backgroundColor: '#34CB79',
-  },
-
-  tagItemText: {
-    margin: 8,
-    alignSelf: 'center',
-  },
-
-  tagItemTextSelected: {
-    color: '#FFF',
-  },
-
-  formGroup: {
-    flexDirection: 'row',
-  },
-
-  button: {
-    backgroundColor: '#34CB79',
-    height: 60,
-    flexDirection: 'row',
-    borderRadius: 10,
-    overflow: 'hidden',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-
-  buttonIcon: {
-    height: 60,
-    width: 60,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  buttonText: {
-    flex: 1,
-    justifyContent: 'center',
-    textAlign: 'center',
-    color: '#FFF',
-    fontFamily: 'Roboto_500Medium',
-    fontSize: 16,
+  detailsButtonText: {
+    color: '#e02041',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });

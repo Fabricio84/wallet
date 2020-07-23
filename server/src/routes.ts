@@ -16,5 +16,6 @@ routes.get('/', (request: Request, response: Response) => {
 
 routes.get('/tags', tagsController.index);
 routes.post('/transactions', transactionsController.create);
+routes.get('/transactions', transactionsController.index);
 
 export default routes;

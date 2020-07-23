@@ -7,7 +7,11 @@ interface TransactionsTags {
 }
 
 class TransactionsController {
-  async index(request: Request, response: Response) {}
+  async index(request: Request, response: Response) {
+    console.log('transactions>index');
+    const items = await knex('transactions').select('*').orderBy('date');
+    return response.json(items);
+  }
   async show(request: Request, response: Response) {}
   async create(request: Request, response: Response) {
     const {
