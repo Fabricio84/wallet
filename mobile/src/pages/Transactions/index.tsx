@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Feather } from '@expo/vector-icons';
+import { Feather as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 
@@ -55,8 +62,8 @@ export default function Transactions() {
     });
 
     setTransaction([...transaction, ...response.data]);
-    // setTotal(response.headers['x-total-count']);
-    // setPage(page + 1);
+    setTotal(response.headers['x-total-count']);
+    setPage(page + 1);
     setLoading(false);
   }
 
@@ -71,61 +78,50 @@ export default function Transactions() {
   function dateParse(dateStr: string) {
     const timeStamp = Date.parse('2020-07-21T21:00');
     const date = new Date(timeStamp);
+    // return date
+    //   .toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+    //   .replace(/de|\./, '')
+    //   .toUpperCase();
+
     return date.toLocaleDateString('pt-BR');
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={logoImg} />
-        <Text style={styles.headerText}>
-          Total de
-          <Text style={styles.headerTextBold}> {total} casos.</Text>
-        </Text>
+        <TouchableOpacity onPress={() => {}}>
+          <Icon name='arrow-left' size={24} color='#ccc' />
+        </TouchableOpacity>
+        <TextInput style={styles.input} onChangeText={() => {}} />
+        <TouchableOpacity onPress={() => {}}>
+          <Icon name='search' size={24} color='#ccc' />
+        </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}>Bem vindo</Text>
-      <Text style={styles.description}>
-        Escolha um dos casos abaixo e salve o dia.
-      </Text>
-
       <FlatList
-        style={styles.incidentList}
+        style={styles.list}
         data={transaction}
         keyExtractor={(transaction: Transaction) => String(transaction.id)}
         showsVerticalScrollIndicator={false}
         onEndReached={loadTransaction}
         onEndReachedThreshold={0.2}
         renderItem={({ item: transaction }) => (
-          <View style={styles.incident}>
-            <Text style={styles.incidentPropery}>TIPO:</Text>
-            <Text style={styles.incidentValue}>
-              {transactionTypeParse(transaction.transaction_type_id)}
-            </Text>
+          <View style={styles.item}>
+            <View style={styles.itemHeader}>
+              <Text style={styles.title}>
+                {transactionTypeParse(transaction.transaction_type_id)}
+              </Text>
+              <Text style={styles.date}>{dateParse(transaction.date)}</Text>
+            </View>
 
-            <Text style={styles.incidentPropery}>DATA:</Text>
-            <Text style={styles.incidentValue}>
-              {dateParse(transaction.date)}
-            </Text>
+            <Text style={styles.description}>{transaction.description}</Text>
 
-            <Text style={styles.incidentPropery}>DESCRIÇÂO:</Text>
-            <Text style={styles.incidentValue}>{transaction.description}</Text>
-
-            <Text style={styles.incidentPropery}>VALOR:</Text>
-            <Text style={styles.incidentValue}>
+            <Text style={styles.amount}>
               {Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
               }).format(transaction.amount)}
             </Text>
-
-            <TouchableOpacity
-              style={styles.detailsButton}
-              onPress={() => NavigateToDetail(transaction)}
-            >
-              <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
-              <Feather name='arrow-right' size={16} color='#e02041' />
-            </TouchableOpacity>
           </View>
         )}
       />

@@ -9,7 +9,18 @@ interface TransactionsTags {
 class TransactionsController {
   async index(request: Request, response: Response) {
     console.log('transactions>index');
-    const items = await knex('transactions').select('*').orderBy('date');
+
+    const { page = 1 } = request.query;
+    const [count] = await knex('transactions').count();
+
+    const items = await knex('transactions')
+      .limit(5)
+      .offset((Number(page) - 1) * 5)
+      .select('*')
+      .orderBy('date');
+
+    response.header('X-Total-Count', count['count(*)']);
+
     return response.json(items);
   }
   async show(request: Request, response: Response) {}
