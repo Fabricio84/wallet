@@ -1,6 +1,6 @@
 const request = require('supertest');
 import app from '../src/app';
-import knex from '../src/database/connection';
+import knex from '../src/database/connections';
 
 describe('Test server', () => {
   test('It should response the GET method', async () => {

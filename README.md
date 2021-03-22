@@ -62,3 +62,6 @@ It is a application with react-native and expo that to create transations and vi
     - [ ] Frontend > adicionar a função de pesquisa
   - [ ] Integrar a view com a rota
 - Painel de transações
+- Usuário
+  - [x] Criar migration, controller e rotas
+  - [ ] Criar teste de sigin

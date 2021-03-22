@@ -4,11 +4,7 @@ export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable('transactions', (table) => {
     table.increments('id').primary();
 
-    table
-      .integer('transaction_type_id')
-      .notNullable()
-      .references('id')
-      .inTable('transaction_type');
+    table.integer('type').defaultTo(0);
 
     table.date('date').notNullable();
 

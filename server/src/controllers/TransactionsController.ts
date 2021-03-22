@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import knex from '../database/connection';
+import knex from '../database/connections';
 
 interface TransactionsTags {
   transaction_id: Number;
@@ -8,8 +8,6 @@ interface TransactionsTags {
 
 class TransactionsController {
   async index(request: Request, response: Response) {
-    console.log('transactions>index');
-
     const { page = 1 } = request.query;
     const [count] = await knex('transactions').count();
 
