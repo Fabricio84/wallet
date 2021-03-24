@@ -9,6 +9,38 @@ describe('Test server', () => {
   });
 });
 
+describe('Test sigin routes', () => {
+  beforeAll(async () => {
+    return knex.migrate.latest().then(() => knex.seed.run());
+  });
+
+  afterAll(() => {
+    return knex.migrate.rollback().then(() => knex.destroy());
+  });
+
+  test('It should response the GET token JWT', async () => {
+    const payload = {
+      email: 'teste@teste.com.br',
+      password: 'teste'
+    };
+
+    await knex('users').insert({
+      name: 'teste',
+      ...payload
+    });
+
+    const response = await request(app)
+    .post('/sigin')
+    .send(payload)
+    .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('name', 'teste');
+    expect(response.body).toHaveProperty('accessToken');
+    expect(response.body.accessToken.length).toBeGreaterThanOrEqual(120);
+  });
+});
+
 describe('Test transactions routes', () => {
   beforeAll(() => {
     return knex.migrate.latest().then(() => knex.seed.run());

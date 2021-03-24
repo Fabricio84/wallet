@@ -8,7 +8,6 @@ interface Tags {
 
 class TagsController {
   async index(request: Request, response: Response) {
-    console.log('tags>index');
     const points = await knex('tags').select('tags.*').orderBy('name');
     return response.json(points);
   }
