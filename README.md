@@ -66,3 +66,5 @@ It is a application with react-native and expo that to create transations and vi
   - [x] Criar migration, controller e rotas
   - [x] Criar teste de sigin
   - [ ] Criar a view do login
+    - [x] Design
+    - [ ] Funcionalidades

@@ -20,7 +20,7 @@ const Home = () => {
       <View style={styles.main}>
         <Image source={require('../../assets/logo.png')} />
         <View>
-          <Text style={styles.title}>Wallet uma carteira inteligente</Text>
+          <Text style={styles.title}>Meu painel de transações</Text>
           <Text style={styles.description}>
             Auxiliando sua saúde financeira para que você não fique doente.
           </Text>
