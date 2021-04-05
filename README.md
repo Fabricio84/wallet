@@ -61,10 +61,11 @@ It is a application with react-native and expo that to create transations and vi
     - [ ] Frontend > Popular items para testar scrolls
     - [ ] Frontend > adicionar a função de pesquisa
   - [ ] Integrar a view com a rota
-- Painel de transações
 - Usuário
   - [x] Criar migration, controller e rotas
   - [x] Criar teste de sigin
   - [ ] Criar a view do login
     - [x] Design
-    - [ ] Funcionalidades
+    - [x] Funcionalidades
+- Painel de transações
+  - [ ] Criar a view com receitas e despesas atual

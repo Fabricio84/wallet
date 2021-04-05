@@ -1,7 +1,5 @@
 import React from 'react';
-import { Feather as Icon } from '@expo/vector-icons';
-import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { View, StyleSheet, Text, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
@@ -17,27 +15,32 @@ const Home = () => {
       style={styles.container}
       imageStyle={{ width: 274, height: 368 }}
     >
-      <View style={styles.main}>
-        <Image source={require('../../assets/logo.png')} />
+      <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Meu painel de transações</Text>
+          <Text style={styles.title}>Painel</Text>
           <Text style={styles.description}>
             Auxiliando sua saúde financeira para que você não fique doente.
           </Text>
         </View>
       </View>
+
+      <View style={styles.main}>
+        <View>
+          <Text style={styles.title}>Receitas</Text>
+          <Text style={styles.description}>
+            Auxiliando sua saúde financeira para que você não fique doente.
+          </Text>
+        </View>
+
+        <View>
+          <Text style={styles.title}>Despesas</Text>
+          <Text style={styles.description}>
+            Auxiliando sua saúde financeira para que você não fique doente.
+          </Text>
+        </View>
+
+      </View>
       <View style={styles.footer}>
-        <RectButton
-          style={styles.button}
-          onPress={handleNavigateToTransactions}
-        >
-          <View style={styles.buttonIcon}>
-            <Text>
-              <Icon name='arrow-right' color='#fff' size={24} />
-            </Text>
-          </View>
-          <Text style={styles.buttonText}>Entrar</Text>
-        </RectButton>
       </View>
     </ImageBackground>
   );
@@ -49,8 +52,13 @@ const styles = StyleSheet.create({
     padding: 32,
   },
 
-  main: {
+  header: {
     flex: 1,
+    justifyContent: 'center',
+  },
+
+  main: {
+    flex: 4,
     justifyContent: 'center',
   },
 
@@ -72,44 +80,6 @@ const styles = StyleSheet.create({
   },
 
   footer: {},
-
-  select: {},
-
-  input: {
-    height: 60,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    marginBottom: 8,
-    paddingHorizontal: 24,
-    fontSize: 16,
-  },
-
-  button: {
-    backgroundColor: '#34CB79',
-    height: 60,
-    flexDirection: 'row',
-    borderRadius: 10,
-    overflow: 'hidden',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-
-  buttonIcon: {
-    height: 60,
-    width: 60,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  buttonText: {
-    flex: 1,
-    justifyContent: 'center',
-    textAlign: 'center',
-    color: '#FFF',
-    fontFamily: 'Roboto_500Medium',
-    fontSize: 16,
-  },
 });
 
 export default Home;
