@@ -68,4 +68,6 @@ It is a application with react-native and expo that to create transations and vi
     - [x] Design
     - [x] Funcionalidades
 - Painel de transações
-  - [ ] Criar a view com receitas e despesas atual
+  - [x] Criado o layout de saldo e o controle de meses para a listagem
+  - [ ] Criar o header da view com o titulo
+  - [ ] Criar a lista de receitas e despesas
